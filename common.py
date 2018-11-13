@@ -58,8 +58,9 @@ def runPolicy(env, episodes, policy):
   g = 0
   h = 0
   l = 0
-  for episode in range(episodes):
-      print("episode %d" % (episode))
+  print("Running %d episodes..." % (episodes))
+  for _ in range(episodes):
+      #print("episode %d" % (episode))
       done = False
       observation = env.reset()
       rewards = 0
@@ -68,16 +69,18 @@ def runPolicy(env, episodes, policy):
           observation, reward, done, _ = env.step(action)
           rewards += reward
           if done:
-              print("Timesteps = %d rewards = %.3f" % (t+1, rewards))
+              #print("Timesteps = %d rewards = %.3f" % (t+1, rewards))
               if env.env.desc[int(env.env.s/env.env.nrow), env.env.s % env.env.nrow] == b'G':
-                print("Goal reached.")
+                #print("Goal reached.")
                 g += 1
               else:
-                print("Fell in hole.")
+                #print("Fell in hole.")
                 h += 1
               timesteps.append(t+1)
               break
       if not done:
         timesteps.append(env._max_episode_steps)
         l += 1 
+  print("goals/holes/lost: %d, %d, %d" % (g, h, l))
+
   return timesteps, (g, h, l)
