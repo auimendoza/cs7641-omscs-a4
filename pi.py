@@ -20,7 +20,7 @@ if len(sys.argv) < 2:
 envid = int(sys.argv[1])
 
 maxiter = 10000
-discount = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+discounts = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 episodes = 1000
 
 env, envname, P, R, actions = common.getEnv(envid)
@@ -31,9 +31,9 @@ print("Policy Iteration")
 ndiffs = []
 ghls = []
 ts = []
-for d in discount:
-  print("discount: %.1f" % (d))
-  func = PolicyIteration(P, R, discount=d, max_iter=maxiter)
+for discount in discounts:
+  print("discount: %.1f" % (discount))
+  func = PolicyIteration(P, R, discount=discount, max_iter=maxiter)
   func.run()
   print("best policy:")
   common.printPolicy(env, func.policy, actions)
@@ -44,7 +44,7 @@ for d in discount:
 
 # plot goal hole or lost
 for i in range(3):
-  plt.plot(discount, np.array(ghls)[:, i], '.-')
+  plt.plot(discounts, np.array(ghls)[:, i], '.-')
 plt.legend(['goal', 'hole', 'lost'], loc="best")
 plt.ylabel("count")
 plt.xlabel("discount")
@@ -55,7 +55,7 @@ plt.savefig("%d-ghl.png" % (envid), bbox_inches="tight")
 plt.close()
 
 # plot timesteps
-plt.plot(discount, ts, '.-')
+plt.plot(discounts, ts, '.-')
 plt.xlabel("discount")
 plt.ylabel("mean episode timesteps")
 plt.suptitle("mean episode timesteps vs discount parameter")
@@ -69,12 +69,15 @@ maxlen = 0
 for i in ndiffs:
     if len(i) > maxlen:
         maxlen = len(i)
+maxlen = maxlen+10
+if envid == 2:
+  maxlen = int(np.median(list(map(lambda x: len(x), ndiffs))))+10
 
 for i in ndiffs:
     if len(i) < maxlen:
-        i.extend([i[-1]]*(maxlen-len(i)))
-    plt.plot(range(maxlen), i, '.-')
-plt.legend(list(map(lambda x: "discount = %.1f" % (x), discount)), loc="best")
+        i.extend([i[-1]]*(maxlen-len(i)))       
+    plt.plot(range(maxlen), i[:maxlen])
+plt.legend(list(map(lambda x: "discount = %.1f" % (x), discounts)), loc="best")
 plt.ylabel('# of differing policies')
 plt.xlabel('iterations')
 plt.suptitle('Policy Iteration: Convergence')
