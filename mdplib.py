@@ -183,7 +183,7 @@ class QLearning(MDP):
     Modified from pymdptoolbox. Add learning rate.
     """
 
-    def __init__(self, transitions, reward, discount, n_iter=10000,
+    def __init__(self, transitions, reward, discount, n_iter=10000, interval=None,
                  learning_rate = None,
                  skip_check=False):
         # Initialise a Q-learning MDP.
@@ -211,11 +211,17 @@ class QLearning(MDP):
         self.Q = _np.zeros((self.S, self.A))
         self.mean_discrepancy = []
 
+        self.policies = []
+        self.iterations = []
+        self.elapsedtimes = []
+        self.interval = interval
+
     def run(self):
         # Run the Q-learning algoritm.
         discrepancy = []
 
         self.time = _time.time()
+        self.starttime = _time.time()
 
         # initial state choice
         s = _np.random.randint(0, self.S)
@@ -229,7 +235,8 @@ class QLearning(MDP):
             # Action choice : greedy with increasing probability
             # probability 1-(1/log(n+2)) can be changed
             pn = _np.random.random()
-            if pn < (1 - (1 / _math.log(n + 2))):
+            if pn < (1 - (1 / (n)**(1/6))):
+            #if pn < (1 - (1 / _math.log(n + 2))):
                 # optimal_action = self.Q[s, :].max()
                 a = self.Q[s, :].argmax()
             else:
@@ -266,14 +273,21 @@ class QLearning(MDP):
             discrepancy.append(_np.absolute(dQ))
 
             # Computing means all over maximal Q variations values
-            if len(discrepancy) == 100:
-                self.mean_discrepancy.append(_np.mean(discrepancy))
-                discrepancy = []
+            #if len(discrepancy) == 100:
+            #    self.mean_discrepancy.append(_np.mean(discrepancy))
+            #    discrepancy = []
 
             # compute the value function and the policy
             self.V = self.Q.max(axis=1)
             self.policy = self.Q.argmax(axis=1)
-            
+
+            if self.interval:
+                if n % self.interval == 0:
+                    self.elapsedtimes.append(_time.time()-self.starttime) 
+                    self.policies.append(self.policy) 
+                    self.iterations.append(n)           
+                    self.mean_discrepancy.append(_np.mean(discrepancy))
+                    discrepancy = []
         self.time = _time.time() - self.time
 
         # convert V and policy to tuples
