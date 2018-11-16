@@ -20,11 +20,11 @@ if len(sys.argv) < 2:
 envid = int(sys.argv[1])
 
 maxiter = 10000
-discounts = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+gammas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 episodes = 1000
 epsilons = [1./100**(i+1) for i in range(5)]
 
-env, envname, P, R, actions = common.getEnv(envid)
+env, envname, P, R, actions, actions2 = common.getEnv(envid)
 
 print("* %s *" % (envname))
 print("Value Iteration")
@@ -32,17 +32,28 @@ print("Value Iteration")
 eiters = []
 eghls = []
 ets = []
+bestgoal = 0
+bestpolicy = None
+bestpolicyparams = {}
 for epsilon in epsilons:
   iters = []
   ghls = []
   ts = []
-  for discount in discounts:
-    print("discount: %.1f, epsilon: %s" % (discount, str(epsilon)))
-    func = ValueIteration(P, R, discount, max_iter=maxiter, epsilon=epsilon)
+  for gamma in gammas:
+    print("gamma: %.1f, epsilon: %s" % (gamma, str(epsilon)))
+    func = ValueIteration(P, R, gamma, max_iter=maxiter, epsilon=epsilon)
     func.run()
-    print("best policy:")
-    common.printPolicy(env, func.policy, actions)
-    timesteps, ghl = common.runPolicy(env, episodes, func.policy)
+    #print("best policy:")
+    #common.printPolicy(env, func.policy, actions)
+    timesteps, gtimesteps, ghl = common.runPolicy(env, episodes, func.policy)
+    if ghl[0] > bestgoal:
+      bestgoal = ghl[0]
+      bestpolicy = func.policy
+      bestpolicyparams['gamma'] = gamma
+      bestpolicyparams['epsilon'] = epsilon
+      bestpolicyparams['iterations'] = func.iter
+      bestpolicyparams['elapsedtime'] = func.time
+      bestpolicyparams['meangtimesteps'] = np.mean(gtimesteps)
     iters.append(func.iter)
     ghls.append(ghl)
     ts.append(np.mean(timesteps))
@@ -50,13 +61,29 @@ for epsilon in epsilons:
   eghls.append(ghls)
   ets.append(ts)
 
+# plot best policy
+if envid == 0:
+  textsize = 20
+  textx = 4.25
+  texty = 1
+if envid == 2:
+  textsize = 12
+  textx = 16.5
+  texty = 4
+bestparamstext = "gamma=%.1f\nepsilon=%s\niterations=%d\nelapsed time=%.3f\nmean goal timesteps=%.3f" % (bestpolicyparams['gamma'],
+    bestpolicyparams['epsilon'],
+    bestpolicyparams['iterations'],
+    bestpolicyparams['elapsedtime'],
+    bestpolicyparams['meangtimesteps'])
+common.printNicePolicy(env, bestpolicy, actions2, textsize, textx, texty, "Value Iteration: Best Policy\n%s" % (envname), bestparamstext, "%d-vi-bestpolicy.png" % (envid))
+
 # plot timesteps
 for i in ets:
-  plt.plot(discounts, i)
+  plt.plot(gammas, i)
 plt.legend(list(map(lambda x: "epsilon = %s" % (str(x)), epsilons)), loc="best")
-plt.xlabel("discount")
+plt.xlabel("gamma")
 plt.ylabel("mean episode timesteps")
-plt.suptitle("mean episode timesteps")
+plt.suptitle("Mean Episode Timesteps")
 plt.title(envname)
 plt.gcf()
 plt.savefig("%d-vi-ts.png" % (envid), bbox_inches="tight")
@@ -64,10 +91,10 @@ plt.close()
 
 # plot convergence
 for i in range(len(epsilons)):    
-    plt.plot(discounts, eiters[i])
+    plt.plot(gammas, eiters[i])
 plt.legend(list(map(lambda x: "epsilon = %s" % (str(x)), epsilons)), loc="best")
 plt.ylabel('iterations')
-plt.xlabel('discount')
+plt.xlabel('gamma')
 plt.suptitle('Value Iteration: Convergence')
 plt.title(envname)
 plt.gcf()
@@ -77,11 +104,11 @@ plt.close()
 # plot goal hole or lost heatmap
 goals = np.array(eghls)[:,:,0]
 import seaborn as sns; sns.set()
-ax = sns.heatmap(goals, annot=True, fmt='g', cmap="Oranges", linewidth=0.2, xticklabels=discounts, yticklabels=epsilons)
+ax = sns.heatmap(goals, annot=True, fmt='g', cmap="Oranges", linewidth=0.2, xticklabels=gammas, yticklabels=epsilons)
 plt.yticks(rotation=0)
-plt.xlabel("discount")
+plt.xlabel("gamma")
 plt.ylabel("epsilon")
-plt.title("Goals after %d episodes\n%s" % (episodes, envname))
+plt.title("Goals After %d Episodes\n%s" % (episodes, envname))
 plt.gcf()
 plt.savefig("%d-vi-ghl.png" % (envid), bbox_inches="tight")
 plt.close()
