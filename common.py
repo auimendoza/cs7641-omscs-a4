@@ -59,7 +59,7 @@ def runPolicy(env, episodes, policy):
   g = 0
   h = 0
   l = 0
-  print("Running %d episodes..." % (episodes))
+  #print("Running %d episodes..." % (episodes))
   for _ in range(episodes):
       #print("episode %d" % (episode))
       done = False
@@ -83,7 +83,7 @@ def runPolicy(env, episodes, policy):
       if not done:
         timesteps.append(env._max_episode_steps)
         l += 1 
-  print("goals/holes/lost: %d, %d, %d" % (g, h, l))
+  #print("goals/holes/lost: %d, %d, %d" % (g, h, l))
 
   return timesteps, gtimesteps, (g, h, l)
 
@@ -108,7 +108,7 @@ def getValMap(env):
 def getPolicyActions(policy, actions, shape):
     return np.array([actions[i] for i in policy]).reshape(shape)
 
-def printNicePolicy(env, policy, actions, annotsize, textx, texty, title, bestparamstext, figname):
+def printNicePolicy(env, policy, actions, annotsize, title, figname):
   mapnum = getValMap(env)
   policyactions = getPolicyActions(policy, actions, env.env.desc.shape)
   sns.heatmap(mapnum, annot=policyactions, fmt='', annot_kws={"size": annotsize}, cbar=False, cmap="Blues")
@@ -116,7 +116,6 @@ def printNicePolicy(env, policy, actions, annotsize, textx, texty, title, bestpa
   plt.xlabel("")
   plt.ylabel("")
   plt.title(title)
-  plt.text(textx, texty, bestparamstext)
   plt.gcf()
   plt.savefig(figname, bbox_inches="tight")
   plt.close()

@@ -17,6 +17,8 @@ def Usage():
 if len(sys.argv) < 2:
   Usage()
 
+mdpid = 'pi'
+mdpname = 'Policy Iteration'
 envid = int(sys.argv[1])
 
 maxiter = 10000
@@ -26,7 +28,7 @@ episodes = 1000
 env, envname, P, R, actions, actions2 = common.getEnv(envid)
 
 print("* %s *" % (envname))
-print("Policy Iteration")
+print(mdpname)
 
 ndiffs = []
 ghls = []
@@ -34,8 +36,9 @@ ts = []
 bestgoal = 0
 bestpolicy = None
 bestpolicyparams = {}
+print("Running ...")
 for gamma in gammas:
-  print("gamma: %.1f" % (gamma))
+  #print("gamma: %.1f" % (gamma))
   func = PolicyIteration(P, R, discount=gamma, max_iter=maxiter)
   func.run()
   #print("best policy:")
@@ -54,20 +57,18 @@ for gamma in gammas:
   ts.append(np.mean(timesteps))
 
 # plot best policy
+textsize = 12
 if envid == 0:
   textsize = 20
-  textx = 4.25
-  texty = 1
-if envid == 2:
-  textsize = 12
-  textx = 16.5
-  texty = 4
-bestparamstext = "gamma=%.1f\ndiffering policies=%d\niterations=%d\nelapsed time=%.3f\nmean goal timesteps=%.3f" % (bestpolicyparams['gamma'],
-    bestpolicyparams['ndiff'],
-    bestpolicyparams['iterations'],
-    bestpolicyparams['elapsedtime'],
-    bestpolicyparams['meangtimesteps'])
-common.printNicePolicy(env, bestpolicy, actions2, textsize, textx, texty, "Policy Iteration: Best Policy\n%s" % (envname), bestparamstext, "%d-pi-bestpolicy.png" % (envid))
+print("== best policy ==")
+print("goals = %d" % (bestgoal))
+print("gamma = %.1f" % (bestpolicyparams['gamma']))
+print("differing policies = %d" % (bestpolicyparams['ndiff']))
+print("iterations = %d" % (bestpolicyparams['iterations']))
+print("elapsed time = %.3f" % (bestpolicyparams['elapsedtime']))
+print("mean timesteps to goal = %.3f" % (bestpolicyparams['meangtimesteps']))
+print("=================")
+common.printNicePolicy(env, bestpolicy, actions2, textsize, "%s: Best Policy\n%s" % (mdpname, envname), "%d-%s-bestpolicy.png" % (envid, mdpid))
 
 # plot goal hole or lost
 for i in range(3):
@@ -78,7 +79,7 @@ plt.xlabel("gamma")
 plt.suptitle("Outcome After %d Episodes" % (episodes))
 plt.title(envname)
 plt.gcf()
-plt.savefig("%d-pi-ghl.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-ghl.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
 
 # plot timesteps
@@ -88,7 +89,7 @@ plt.ylabel("mean episode timesteps")
 plt.suptitle("Mean Episode Timesteps")
 plt.title(envname)
 plt.gcf()
-plt.savefig("%d-pi-ts.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-ts.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
 
 # plot convergence
@@ -107,8 +108,8 @@ for i in ndiffs:
 plt.legend(list(map(lambda x: "gamma = %.1f" % (x), gammas)), loc="best")
 plt.ylabel('# of differing policies')
 plt.xlabel('iterations')
-plt.suptitle('Policy Iteration: Convergence')
+plt.suptitle('%s: Convergence' % (mdpname))
 plt.title(envname)
 plt.gcf()
-plt.savefig("%d-pi-converge.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-converge.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()

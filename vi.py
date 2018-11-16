@@ -17,6 +17,8 @@ def Usage():
 if len(sys.argv) < 2:
   Usage()
 
+mdpid = 'vi'
+mdpname = 'Value Iteration'
 envid = int(sys.argv[1])
 
 maxiter = 10000
@@ -27,7 +29,7 @@ epsilons = [1./100**(i+1) for i in range(5)]
 env, envname, P, R, actions, actions2 = common.getEnv(envid)
 
 print("* %s *" % (envname))
-print("Value Iteration")
+print(mdpname)
 
 eiters = []
 eghls = []
@@ -35,12 +37,14 @@ ets = []
 bestgoal = 0
 bestpolicy = None
 bestpolicyparams = {}
+
+print("Running ...")
 for epsilon in epsilons:
   iters = []
   ghls = []
   ts = []
   for gamma in gammas:
-    print("gamma: %.1f, epsilon: %s" % (gamma, str(epsilon)))
+    #print("gamma: %.1f, epsilon: %s" % (gamma, str(epsilon)))
     func = ValueIteration(P, R, gamma, max_iter=maxiter, epsilon=epsilon)
     func.run()
     #print("best policy:")
@@ -62,20 +66,18 @@ for epsilon in epsilons:
   ets.append(ts)
 
 # plot best policy
+textsize = 12
 if envid == 0:
   textsize = 20
-  textx = 4.25
-  texty = 1
-if envid == 2:
-  textsize = 12
-  textx = 16.5
-  texty = 4
-bestparamstext = "gamma=%.1f\nepsilon=%s\niterations=%d\nelapsed time=%.3f\nmean goal timesteps=%.3f" % (bestpolicyparams['gamma'],
-    bestpolicyparams['epsilon'],
-    bestpolicyparams['iterations'],
-    bestpolicyparams['elapsedtime'],
-    bestpolicyparams['meangtimesteps'])
-common.printNicePolicy(env, bestpolicy, actions2, textsize, textx, texty, "Value Iteration: Best Policy\n%s" % (envname), bestparamstext, "%d-vi-bestpolicy.png" % (envid))
+print("== best policy ==")
+print("goals = %d" % (bestgoal))
+print("gamma = %.1f" % (bestpolicyparams['gamma']))
+print("epsilon = %s" % (bestpolicyparams['epsilon']))
+print("iterations = %d" % (bestpolicyparams['iterations']))
+print("elapsed time = %.3f" % (bestpolicyparams['elapsedtime']))
+print("mean timesteps to goal = %.3f" % (bestpolicyparams['meangtimesteps']))
+print("=================")
+common.printNicePolicy(env, bestpolicy, actions2, textsize, "%s: Best Policy\n%s" % (mdpname, envname), "%d-%s-bestpolicy.png" % (envid, mdpid))
 
 # plot timesteps
 for i in ets:
@@ -86,7 +88,7 @@ plt.ylabel("mean episode timesteps")
 plt.suptitle("Mean Episode Timesteps")
 plt.title(envname)
 plt.gcf()
-plt.savefig("%d-vi-ts.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-ts.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
 
 # plot convergence
@@ -95,10 +97,10 @@ for i in range(len(epsilons)):
 plt.legend(list(map(lambda x: "epsilon = %s" % (str(x)), epsilons)), loc="best")
 plt.ylabel('iterations')
 plt.xlabel('gamma')
-plt.suptitle('Value Iteration: Convergence')
+plt.suptitle('%s: Convergence' % (mdpname))
 plt.title(envname)
 plt.gcf()
-plt.savefig("%d-vi-converge.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-converge.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
 
 # plot goal hole or lost heatmap
@@ -110,5 +112,5 @@ plt.xlabel("gamma")
 plt.ylabel("epsilon")
 plt.title("Goals After %d Episodes\n%s" % (episodes, envname))
 plt.gcf()
-plt.savefig("%d-vi-ghl.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-ghl.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
