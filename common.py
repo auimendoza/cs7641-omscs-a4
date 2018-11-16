@@ -103,21 +103,22 @@ def getValMap(env):
           mapnum.append(1)
       if s == 'G':
           mapnum.append(10)
-  return np.array(mapnum).reshape(16,16)
+  return np.array(mapnum).reshape(env.env.desc.shape)
 
-def getPolicyActions(policy, actions):
-    return np.array([actions[i] for i in policy]).reshape(16,16)
+def getPolicyActions(policy, actions, shape):
+    return np.array([actions[i] for i in policy]).reshape(shape)
 
-def printNicePolicy(env, policy, actions, title, figname):
+def printNicePolicy(env, policy, actions, annotsize, textx, texty, title, bestparamstext, figname):
   mapnum = getValMap(env)
-  policyactions = getPolicyActions(policy, actions)
-  sns.heatmap(mapnum, annot=policyactions, fmt='', cbar=False, cmap="Blues")
+  policyactions = getPolicyActions(policy, actions, env.env.desc.shape)
+  sns.heatmap(mapnum, annot=policyactions, fmt='', annot_kws={"size": annotsize}, cbar=False, cmap="Blues")
   plt.yticks(rotation=0)
   plt.xlabel("")
   plt.ylabel("")
   plt.title(title)
+  plt.text(textx, texty, bestparamstext)
   plt.gcf()
-  plt.savefig(figname)
+  plt.savefig(figname, bbox_inches="tight")
   plt.close()
 
 def printPolicy(env, policy, actions):
