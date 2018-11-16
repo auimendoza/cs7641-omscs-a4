@@ -48,6 +48,7 @@ for gamma in gammas:
     bestpolicyparams['iterations'] = func.iter
     bestpolicyparams['elapsedtime'] = func.time
     bestpolicyparams['meangtimesteps'] = np.mean(gtimesteps)
+    bestpolicyparams['ndiff'] = func.n_different[-1]
   ndiffs.append(func.n_different)
   ghls.append(ghl)
   ts.append(np.mean(timesteps))
@@ -61,7 +62,8 @@ if envid == 2:
   textsize = 12
   textx = 16.5
   texty = 4
-bestparamstext = "gamma=%.1f\niterations=%d\nelapsed time=%.3f\nmean goal timesteps=%.3f" % (bestpolicyparams['gamma'],
+bestparamstext = "gamma=%.1f\ndiffering policies=%d\niterations=%d\nelapsed time=%.3f\nmean goal timesteps=%.3f" % (bestpolicyparams['gamma'],
+    bestpolicyparams['ndiff'],
     bestpolicyparams['iterations'],
     bestpolicyparams['elapsedtime'],
     bestpolicyparams['meangtimesteps'])
