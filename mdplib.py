@@ -184,7 +184,7 @@ class QLearning(MDP):
     """
 
     def __init__(self, transitions, reward, discount, n_iter=10000, interval=None,
-                 learning_rate = None,
+                 learning_rate = None, explore_interval=100,
                  skip_check=False):
         # Initialise a Q-learning MDP.
 
@@ -215,6 +215,7 @@ class QLearning(MDP):
         self.iterations = []
         self.elapsedtimes = []
         self.interval = interval
+        self.explore_interval = explore_interval
 
     def run(self):
         # Run the Q-learning algoritm.
@@ -229,7 +230,7 @@ class QLearning(MDP):
         for n in range(1, self.max_iter + 1):
 
             # Reinitialisation of trajectories every 100 transitions
-            if (n % 100) == 0:
+            if (n % self.explore_interval) == 0:
                 s = _np.random.randint(0, self.S)
 
             # Action choice : greedy with increasing probability
