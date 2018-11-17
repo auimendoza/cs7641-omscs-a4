@@ -69,6 +69,7 @@ print("elapsed time = %.3f" % (bestpolicyparams['elapsedtime']))
 print("mean timesteps to goal = %.3f" % (bestpolicyparams['meangtimesteps']))
 print("=================")
 common.printNicePolicy(env, bestpolicy, actions2, textsize, "%s: Best Policy\n%s" % (mdpname, envname), "%d-%s-bestpolicy.png" % (envid, mdpid))
+print(bestpolicy)
 
 # plot goal hole or lost
 for i in range(3):

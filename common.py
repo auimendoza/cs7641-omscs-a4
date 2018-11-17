@@ -108,10 +108,8 @@ def getValMap(env):
 def getPolicyActions(policy, actions, shape):
     return np.array([actions[i] for i in policy]).reshape(shape)
 
-def printNicePolicy(env, policy, actions, annotsize, title, figname):
-  mapnum = getValMap(env)
-  policyactions = getPolicyActions(policy, actions, env.env.desc.shape)
-  sns.heatmap(mapnum, annot=policyactions, fmt='', annot_kws={"size": annotsize}, cbar=False, cmap="Blues")
+def printHeatMap(mapnum, annot, annotsize, title, figname):
+  sns.heatmap(mapnum, annot=annot, fmt='', annot_kws={"size": annotsize}, cbar=False, cmap="Blues")
   plt.yticks(rotation=0)
   plt.xlabel("")
   plt.ylabel("")
@@ -119,6 +117,11 @@ def printNicePolicy(env, policy, actions, annotsize, title, figname):
   plt.gcf()
   plt.savefig(figname, bbox_inches="tight")
   plt.close()
+
+def printNicePolicy(env, policy, actions, annotsize, title, figname):
+  mapnum = getValMap(env)
+  policyactions = getPolicyActions(policy, actions, env.env.desc.shape)
+  printHeatMap(mapnum, policyactions, annotsize, title, figname)
 
 def printPolicy(env, policy, actions):
   print(np.array([actions[i] for i in policy]).reshape(env.env.nrow, env.env.ncol))
