@@ -18,6 +18,8 @@ def Usage():
 if len(sys.argv) < 2:
   Usage()
 
+mdpid = "q"
+mdpname = "Q Learning"
 envid = int(sys.argv[1])
 
 maxiter = 2000000
@@ -29,7 +31,7 @@ alphas = [0.1, 0.3, 0.5, 0.7, 0.9]
 env, envname, P, R, actions, actions2 = common.getEnv(envid)
 
 print("* %s *" % (envname))
-print("Q Learning")
+print(mdpname)
 
 aiters = []
 aghls = []
@@ -38,13 +40,15 @@ amd = []
 bestgoal = 0
 bestpolicy = None
 bestpolicyparams = {}
+
+print("Running ...")
 for alpha in alphas:
   iters = []
   ghls = []
   ts = []
   md = []
   for gamma in gammas:
-    print("gamma: %.1f, alpha: %s" % (gamma, str(alpha)))
+    #print("gamma: %.1f, alpha: %s" % (gamma, str(alpha)))
     func = QLearning(P, R, gamma, maxiter, interval, alpha)
     func.run()
     ighl = []
@@ -71,12 +75,18 @@ for alpha in alphas:
   amd.append(md)
 
 # plot best policy 
-bestparamstext = "gamma=%.1f\nalpha=%.1f\niterations=%d\nelapsed time=%.3f\nmean goal timesteps=%.3f" % (bestpolicyparams['gamma'],
-    bestpolicyparams['alpha'],
-    bestpolicyparams['iterations'],
-    bestpolicyparams['elapsedtime'],
-    bestpolicyparams['meangtimesteps'])
-common.printNicePolicy(env, bestpolicy, actions2, 20, 4.75, 1, "QLearning: Best Policy\n%s" % (envname), bestparamstext, "%d-q-bestpolicy.png" % (envid))
+textsize = 12
+if envid == 0:
+  textsize = 20
+print("== best policy ==")
+print("goals = %d" % (bestgoal))
+print("gamma = %.1f" % (bestpolicyparams['gamma']))
+print("alpha = %.1f" % (bestpolicyparams['alpha']))
+print("iterations = %d" % (bestpolicyparams['iterations']))
+print("elapsed time = %.3f" % (bestpolicyparams['elapsedtime']))
+print("mean timesteps to goal = %.3f" % (bestpolicyparams['meangtimesteps']))
+print("=================")
+common.printNicePolicy(env, bestpolicy, actions2, textsize, "%s: Best Policy\n%s" % (mdpname, envname), "%d-%s-bestpolicy.png" % (envid, mdpid))
 
 # plot iterations, params vs goal/discrepancy
 iterations = aiters[0][0]
@@ -98,7 +108,7 @@ g.fig.subplots_adjust(top=0.7)
 g.fig.suptitle('Goals After %d Episodes\n%s' % (episodes, envname))
 g.set_xticklabels(rotation=90)
 plt.gcf()
-plt.savefig("%d-q-goal-it.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-goal-it.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
 
 g = sns.FacetGrid(ghlpd, col="alpha", hue="gamma", col_wrap=5, legend_out=False)
@@ -110,7 +120,7 @@ g.fig.subplots_adjust(top=0.7)
 g.fig.suptitle('Q Mean Discrepancy\n%s' % (envname))
 g.set_xticklabels(rotation=90)
 plt.gcf()
-plt.savefig("%d-q-md-it.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-md-it.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()
 
 g = sns.FacetGrid(ghlpd, col="alpha", hue="gamma", col_wrap=5, legend_out=False)
@@ -123,5 +133,5 @@ g.fig.suptitle('Timesteps to Goal or Hole\n%s' % (envname))
 g.set_xticklabels(rotation=90)
 g.set(ylim=(0,200))
 plt.gcf()
-plt.savefig("%d-q-ts-it.png" % (envid), bbox_inches="tight")
+plt.savefig("%d-%s-ts-it.png" % (envid, mdpid), bbox_inches="tight")
 plt.close()

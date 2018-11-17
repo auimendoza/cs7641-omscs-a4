@@ -1,0 +1,70 @@
+(py36) asterix:a4 auimendoza$ for i in 0 2; do ./pi.py $i; ./vi.py $i; done
+* FrozenLake-v0 *
+Policy Iteration
+Running ...
+== best policy ==
+goals = 740
+gamma = 0.9
+differing policies = 0
+iterations = 5
+elapsed time = 0.003
+mean timesteps to goal = 37.874
+=================
+* FrozenLake-v0 *
+Value Iteration
+Running ...
+== best policy ==
+goals = 750
+gamma = 0.9
+epsilon = 0.0001
+iterations = 60
+elapsed time = 0.004
+mean timesteps to goal = 39.189
+=================
+* FrozenLake16x16-custom *
+Policy Iteration
+Running ...
+== best policy ==
+goals = 721
+gamma = 0.9
+differing policies = 1
+iterations = 10000
+elapsed time = 32.216
+mean timesteps to goal = 151.710
+=================
+* FrozenLake16x16-custom *
+Value Iteration
+Running ...
+== best policy ==
+goals = 733
+gamma = 0.9
+epsilon = 1e-10
+iterations = 187
+elapsed time = 0.037
+mean timesteps to goal = 150.405
+=================
+(py36) asterix:a4 auimendoza$ 
+(py36) asterix:a4 auimendoza$ for i in 0 2; do ./q.py $i; done
+* FrozenLake-v0 *
+Q Learning
+Running ...
+== best policy ==
+goals = 756
+gamma = 0.9
+alpha = 0.9
+iterations = 500000
+elapsed time = 20.872
+mean timesteps to goal = 39.649
+=================
+asterix:a4 auimendoza$ ./q.py 2
+* FrozenLake16x16-custom *
+Q Learning
+Running ...
+== best policy ==
+goals = 274
+gamma = 0.9
+alpha = 0.3
+iterations = 1500000
+elapsed time = 189.240
+mean timesteps to goal = 164.391
+=================
