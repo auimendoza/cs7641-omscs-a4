@@ -35,7 +35,9 @@ ghls = []
 ts = []
 bestgoal = 0
 bestpolicy = None
+bestpolicyV = None
 bestpolicyparams = {}
+
 print("Running ...")
 for gamma in gammas:
   #print("gamma: %.1f" % (gamma))
@@ -47,6 +49,7 @@ for gamma in gammas:
   if ghl[0] > bestgoal:
     bestgoal = ghl[0]
     bestpolicy = func.policy
+    bestpolicyV = func.V
     bestpolicyparams['gamma'] = gamma
     bestpolicyparams['iterations'] = func.iter
     bestpolicyparams['elapsedtime'] = func.time
@@ -69,7 +72,10 @@ print("elapsed time = %.3f" % (bestpolicyparams['elapsedtime']))
 print("mean timesteps to goal = %.3f" % (bestpolicyparams['meangtimesteps']))
 print("=================")
 common.printNicePolicy(env, bestpolicy, actions2, textsize, "%s: Best Policy\n%s" % (mdpname, envname), "%d-%s-bestpolicy.png" % (envid, mdpid))
+print("best policy")
 print(bestpolicy)
+print("best policy V")
+print(bestpolicyV)
 
 # plot goal hole or lost
 for i in range(3):
