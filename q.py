@@ -50,6 +50,7 @@ for alpha in alphas:
   md = []
   for gamma in gammas:
     #print("gamma: %.1f, alpha: %s" % (gamma, str(alpha)))
+    sys.stdout.write('.')
     func = QLearning(P, R, gamma, maxiter, interval, alpha, exploreinterval)
     func.run()
     ighl = []
