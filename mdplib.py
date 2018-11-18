@@ -244,12 +244,10 @@ class QLearning(MDP):
                 a = _np.random.randint(0, self.A)
 
             # Simulating next state s_new and reward associated to <s,s_new,a>
-            p_s_new = _np.random.random()
-            p = 0
-            s_new = -1
-            while (p < p_s_new) and (s_new < (self.S - 1)):
-                s_new = s_new + 1
-                p = p + self.P[a][s, s_new]
+            nP = _np.array(self.P)
+            schoice = _np.where(nP[a, s, :] > 0)
+            pchoice = nP[a, s, schoice]
+            s_new = _np.random.choice(a=schoice[0], p=pchoice[0])
 
             try:
                 r = self.R[a][s, s_new]
