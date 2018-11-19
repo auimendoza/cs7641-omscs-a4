@@ -276,13 +276,18 @@ class QLearning(MDP):
                     r = self.R[s]
 
             # Updating the value of Q
+            d = (1 / _math.sqrt(n + 2)) 
+            if self.learning_rate:
+                d = self.learning_rate
+            """
             if self.learning_rate:
                 if (n % 1000) == 0:
                     d = d-0.001
                 d = min(d, 0.001)
             else:
                 d = (1 / _math.sqrt(n + 2)) 
-
+            """
+            
             futureQ = r + self.discount * self.Q[s_new, :].max() - self.Q[s, a]
             dQ = d*futureQ
             self.Q[s, a] = self.Q[s, a] + dQ
