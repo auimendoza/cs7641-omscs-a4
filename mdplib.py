@@ -230,7 +230,7 @@ class QLearning(MDP):
 
         for n in range(1, self.max_iter + 1):
 
-            # Reinitialisation of trajectories every 100 transitions
+            # Reinitialisation of trajectories every explore_interval transitions
             if (n % self.explore_interval) == 0:
                 s = _np.random.randint(0, self.S)
 
@@ -248,7 +248,10 @@ class QLearning(MDP):
             nP = _np.array(self.P)
             schoice = _np.where(nP[a, s, :] > 0)
             pchoice = nP[a, s, schoice]
-            s_new = _np.random.choice(a=schoice[0], p=pchoice[0])
+            if schoice[0].shape[0] == 0:
+                continue
+            else:
+                s_new = _np.random.choice(a=schoice[0], p=pchoice[0])
 
             try:
                 r = self.R[a][s, s_new]
