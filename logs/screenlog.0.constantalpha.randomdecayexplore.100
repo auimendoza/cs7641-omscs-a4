@@ -1,0 +1,29 @@
+constant alpha + random, decaying explore
+[Kubuntu@caws2 ~/assign4> for i in 2 0; do python3 q.py $i 100; done
+* FrozenLake16x16-custom *
+Q Learning
+Running ...
+.........................== best policy ==
+explore interval = 100
+goals = 0
+Traceback (most recent call last):
+  File "q.py", line 84, in <module>
+    print("gamma = %.1f" % (bestpolicyparams['gamma']))
+KeyError: 'gamma'
+/home/ubuntu/.local/lib/python3.6/site-packages/gym/envs/registration.py:14: PkgResourcesDeprecationWarning: Parameters to load are deprecated.  Call .resolve and .require separately.
+  result = entry_point.load(False)
+* FrozenLake-v0 *
+Q Learning
+Running ...
+.........................== best policy ==
+explore interval = 100
+goals = 120
+gamma = 0.1
+alpha = 0.7
+iterations = 1250000
+elapsed time = 69.622
+mean timesteps to goal = 13.650
+=================
+[0 0 0 0 1 0 2 0 3 1 0 0 0 3 1 0]
+ubuntu@caws2 ~/assign4> [Kubuntu@caws2 ~/assign4> exit
+exit

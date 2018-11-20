@@ -1,0 +1,32 @@
+b[Knull > screenlog.0
+ubuntu@caws2 ~/assign4/50> cat /dev/null > screenlog.0[11Pmore[C[C[C[C[C[C[C[C[C[C[C[Cls[Kmore screenlog.0.randomexplore.decayalpha [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat screenlog.0 > screenlog.0.randomexplore.decayalpha[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cd 50/[Kfor i in 2 0; do python3 q.py $i 50; done[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd 50/[K[K[K[K[K[K[Kecho "constant alpha + random +[K[K, decaying explore"
+constant alpha + random, decaying explore
+ubuntu@caws2 ~/assign4/50> echo "constant alpha + random, decaying explore"[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[21Pcat /dev/null > screenlog.0[11Pmore[C[C[C[C[C[C[C[C[C[C[C[Cls[Kmore screenlog.0.randomexplore.decayalpha [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat screenlog.0 > screenlog.0.randomexplore.decayalpha[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cd 50/[Kfor i in 2 0; do python3 q.py $i 50; done
+python3: can't open file 'q.py': [Errno 2] No such file or directory
+python3: can't open file 'q.py': [Errno 2] No such file or directory
+ubuntu@caws2 ~/assign4/50> cd ..
+ubuntu@caws2 ~/assign4> cd ..for i in 2 0; do python3 q.py $i 50; done[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cecho "constant alpha + random, decaying explore"[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pfor i in 2 0; do python3 q.py $i 50; done
+* FrozenLake16x16-custom *
+Q Learning
+Running ...
+.........................== best policy ==
+explore interval = 50
+goals = 0
+Traceback (most recent call last):
+  File "q.py", line 84, in <module>
+    print("gamma = %.1f" % (bestpolicyparams['gamma']))
+KeyError: 'gamma'
+/home/ubuntu/.local/lib/python3.6/site-packages/gym/envs/registration.py:14: PkgResourcesDeprecationWarning: Parameters to load are deprecated.  Call .resolve and .require separately.
+  result = entry_point.load(False)
+* FrozenLake-v0 *
+Q Learning
+Running ...
+.........................== best policy ==
+explore interval = 50
+goals = 0
+Traceback (most recent call last):
+  File "q.py", line 84, in <module>
+    print("gamma = %.1f" % (bestpolicyparams['gamma']))
+KeyError: 'gamma'
+ubuntu@caws2 ~/assign4> [Kubuntu@caws2 ~/assign4> exit
+exit
