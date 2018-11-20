@@ -3,6 +3,11 @@ Fall 2018 - OMSCS
 Assignment 4: Markov Decision Processes
 mmendoza32
 
+Download code from:
+https://github.gatech.edu/mmendoza32/cs7641-omscs-a4
+or
+https://github.com/auimendoza/cs7641-omscs-a4
+
 Steps to run project codes:
 
 required versions:
@@ -35,10 +40,7 @@ required versions:
      do
        for j in 50 100 200
        do
-         for k in 0.5 0.25
-         do
-           python q.py $i $j $k
-         done
+         python q.py $i $j $k
        done
      done
 
