@@ -10,7 +10,7 @@ import seaborn as sns; sns.set()
 
 def Usage():
   print("Usage:")
-  print("./%s <envid> <exploreinterval> <exploreprob>" % (sys.argv[0]))
+  print("python %s <envid> <exploreinterval> <exploreprob>" % (sys.argv[0]))
   sys.exit(1)
 
 if len(sys.argv) < 4:

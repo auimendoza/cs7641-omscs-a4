@@ -1,5 +1,3 @@
-#!/Users/auimendoza/anaconda/envs/py36/bin/python
-
 import gym
 import numpy as np
 from mdptoolbox.mdp import ValueIteration
@@ -11,7 +9,7 @@ import matplotlib.pyplot as plt
 
 def Usage():
   print("Usage:")
-  print("./%s <envid>" % (sys.argv[0]))
+  print("python %s <envid>" % (sys.argv[0]))
   sys.exit(1)
 
 if len(sys.argv) < 2:
