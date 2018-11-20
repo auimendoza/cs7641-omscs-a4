@@ -1,5 +1,3 @@
-#!/Users/auimendoza/anaconda/envs/py36/bin/python
-
 import gym
 import numpy as np
 from mdptoolbox.mdp import ValueIteration
@@ -22,7 +20,7 @@ mdpid = "q"
 mdpname = "Q Learning"
 envid = int(sys.argv[1])
 exploreinterval = int(sys.argv[2])
-exploreprob = int(sys.argv[3])
+exploreprob = float(sys.argv[3])
 
 maxiter = 2000000
 interval = 250000
