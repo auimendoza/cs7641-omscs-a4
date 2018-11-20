@@ -12,7 +12,7 @@ def Usage():
   print("python %s <envid>" % (sys.argv[0]))
   sys.exit(1)
 
-if len(sys.argv) < 2:
+if len(sys.argv) != 2:
   Usage()
 
 mdpid = 'pi'

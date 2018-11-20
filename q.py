@@ -10,17 +10,16 @@ import seaborn as sns; sns.set()
 
 def Usage():
   print("Usage:")
-  print("python %s <envid> <exploreinterval> <exploreprob>" % (sys.argv[0]))
+  print("python %s <envid> <exploreinterval>" % (sys.argv[0]))
   sys.exit(1)
 
-if len(sys.argv) < 4:
+if len(sys.argv) != 3:
   Usage()
 
 mdpid = "q"
 mdpname = "Q Learning"
 envid = int(sys.argv[1])
 exploreinterval = int(sys.argv[2])
-exploreprob = float(sys.argv[3])
 
 maxiter = 2000000
 interval = 250000
@@ -50,7 +49,7 @@ for alpha in alphas:
   for gamma in gammas:
     #print("gamma: %.1f, alpha: %s" % (gamma, str(alpha)))
     sys.stdout.write('.')
-    func = QLearning(P, R, gamma, maxiter, interval, alpha, exploreinterval, exploreprob)
+    func = QLearning(P, R, gamma, maxiter, interval, alpha, exploreinterval)
     func.run()
     ighl = []
     its = []
@@ -111,7 +110,7 @@ g.fig.subplots_adjust(top=0.7)
 g.fig.suptitle('Goals After %d Episodes\n%s' % (episodes, envname))
 g.set_xticklabels(rotation=90)
 plt.gcf()
-plt.savefig("%d-%s-%d-%.1f-goal-it.png" % (envid, mdpid, exploreinterval, exploreprob), bbox_inches="tight")
+plt.savefig("%d-%s-%d-goal-it.png" % (envid, mdpid, exploreinterval), bbox_inches="tight")
 plt.close()
 
 g = sns.FacetGrid(ghlpd, col="alpha", hue="gamma", col_wrap=3, legend_out=False)
@@ -123,7 +122,7 @@ g.fig.subplots_adjust(top=0.7)
 g.fig.suptitle('Q Mean Discrepancy\n%s' % (envname))
 g.set_xticklabels(rotation=90)
 plt.gcf()
-plt.savefig("%d-%s-%d-%.1f-md-it.png" % (envid, mdpid, exploreinterval, exploreprob), bbox_inches="tight")
+plt.savefig("%d-%s-%d-md-it.png" % (envid, mdpid, exploreinterval), bbox_inches="tight")
 plt.close()
 
 g = sns.FacetGrid(ghlpd, col="alpha", hue="gamma", col_wrap=3, legend_out=False)
@@ -136,5 +135,5 @@ g.fig.suptitle('Timesteps to Goal or Hole\n%s' % (envname))
 g.set_xticklabels(rotation=90)
 g.set(ylim=(0,200))
 plt.gcf()
-plt.savefig("%d-%s-%d-%.1f-ts-it.png" % (envid, mdpid, exploreinterval, exploreprob), bbox_inches="tight")
+plt.savefig("%d-%s-%d-ts-it.png" % (envid, mdpid, exploreinterval), bbox_inches="tight")
 plt.close()
