@@ -184,7 +184,7 @@ class QLearning(MDP):
     """
 
     def __init__(self, transitions, reward, discount, n_iter=10000, interval=None,
-                 learning_rate = None, explore_interval=100,
+                 learning_rate = None, explore_interval=100, explore_prob=0.5,
                  skip_check=False):
         # Initialise a Q-learning MDP.
 
@@ -216,6 +216,7 @@ class QLearning(MDP):
         self.elapsedtimes = []
         self.interval = interval
         self.explore_interval = explore_interval
+        self.explore_prob = explore_prob
 
     def run(self):
         # Run the Q-learning algoritm.
@@ -227,17 +228,14 @@ class QLearning(MDP):
         # initial state choice
         s = _np.random.randint(0, self.S)
         d = self.learning_rate
-        t = 0.9
 
         for n in range(1, self.max_iter + 1):
 
             # Reinitialisation of trajectories every explore_interval transitions
             ps = _np.random.random()
-            if ps < t:
+            if (ps < self.explore_prob) or \
+               ((n % self.explore_interval) == 0):
                 s = _np.random.randint(0, self.S)
-            if (n % self.explore_interval) == 0:
-                #s = _np.random.randint(0, self.S)
-                t = min(t-0.01, 0.01)
 
             # Action choice : greedy with increasing probability
             # probability 1-(1/log(n+2)) can be changed
@@ -257,16 +255,6 @@ class QLearning(MDP):
                 s_new = s_new + 1
                 p = p + self.P[a][s, s_new]
             
-            """
-            nP = _np.array(self.P)
-            schoice = _np.where(nP[a, s, :] > 0)
-            pchoice = nP[a, s, schoice]
-            if schoice[0].shape[0] == 0:
-                continue
-            else:
-                s_new = _np.random.choice(a=schoice[0], p=pchoice[0])
-            """
-
             try:
                 r = self.R[a][s, s_new]
             except IndexError:
@@ -279,14 +267,6 @@ class QLearning(MDP):
             d = (1 / _math.sqrt(n + 2)) 
             if self.learning_rate:
                 d = self.learning_rate
-            """
-            if self.learning_rate:
-                if (n % 1000) == 0:
-                    d = d-0.001
-                d = min(d, 0.001)
-            else:
-                d = (1 / _math.sqrt(n + 2)) 
-            """
             
             futureQ = r + self.discount * self.Q[s_new, :].max() - self.Q[s, a]
             dQ = d*futureQ
